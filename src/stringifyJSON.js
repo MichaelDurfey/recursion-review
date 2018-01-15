@@ -10,7 +10,7 @@ var stringifyJSON = function(obj) {
     if (typeof obj === 'string') {
       return String(`"${obj}"`);
     }
-    return String(`${obj}`);
+    return String(obj);
   } else {
     // Arrays
     if (Array.isArray(obj)) {
