@@ -14,11 +14,9 @@ var getElementsByClassName = function(className) {
       results.push(node);
     }
     //go through child nodes
-    
-    for (let i = 0; i < node.children.length; i++) {
-      //domSearch
-      domSearch(node.children[i]);
-    }
+    Array.from(node.children).forEach( function(item) {
+      domSearch(item);
+    });
   };
   domSearch(document.body);
   return results;
