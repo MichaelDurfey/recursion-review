@@ -9,14 +9,17 @@ var getElementsByClassName = function(className) {
   var results = [];
   var domSearch = function(node) {
     //see if classname contained in node
-    if (node.classList.contains(className)) {
+    if (node.classList && node.classList.contains(className)) {
       //if so, push to results
       results.push(node);
     }
     //go through child nodes
-    Array.from(node.children).forEach( function(item) {
-      domSearch(item);
-    });
+    if (node.hasChildNodes()) {
+      var childList = node.childNodes;
+      for (var i = 0; i < childList.length; i++) {
+        domSearch(childList[i]);
+      }
+    }
   };
   domSearch(document.body);
   return results;
