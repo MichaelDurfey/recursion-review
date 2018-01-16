@@ -4,34 +4,62 @@
 // but you're not, so you'll write it from scratch:
 var parseJSON = function(json) {
   // your code goes here
+
+//'{"boolean, true": true, "boolean, false": false, "null": null }'
+
   var result;  
   var newJson = json.slice(1, -1);
 
   if (json[0] === '{') {
+    if (json[json.length-1] !== '}') {
+      throw new SyntaxError();
+    }
     result = {};
     // parseJSON(newJson);
     //split
-    var objSplit = newJson.split(', ').map( function(item) {
+    var commaLocation = [];
+    var inQuotation = false;
+    for (var i=1; i<json.length; i++) {
+      if (json[i] === '"') {
+        inQuotation = !inQuotation;
+      }
+
+      if (json[i] === ',') {
+        if (!inQuotation) {
+          commaLocation.push(i);  
+        }
+      }
+    }
+
+    //TODO: go through commaLocation to manually split string
+    var objSplit = newJson.split(',').map( function(item) {
+      
       return item.split(':');
     });
+console.log(objSplit);
 
     objSplit.forEach(function(item) {
-      result[item[0].slice(1, -1)] = parseJSON(item[1].trim());
+      console.log(item);
+      if (item.length > 1) {
+        result[item[0].trim().slice(1, -1)] = parseJSON(item[1].trim());
+      }
     });
     // console.log(objSplit)
 
     console.log(result);
     return result;
 
-
   } else if (json[0] === '[') {
+    if (json[json.length-1] !== ']') {
+      throw new SyntaxError();
+    }
     result = [];
     if (newJson.length > 0) {
       var commaSepJSon = newJson.split(',');
+      commaSepJSon.forEach( function(item) { 
+        result.push(parseJSON(item.trim()));
+      });
     }
-    commaSepJSon.forEach( function(item) { 
-      result.push(parseJSON(item.trim()));
-    });
     return result;
   }
 
@@ -52,55 +80,7 @@ var parseJSON = function(json) {
     // if number
     return Number(json);
   }
-    
-    // commaSepJSon.forEach(function(item) {
-    //   result.push(parseJSON(item));
-    // });
-
-    // json.join();
-    // splitElements = json.split(', ');
-    // console.log(splitElements);
-  // json.slice(1).forEach( function(elem, index) {
-      
-  
-  //   });
-    // if (elem ===) {
-
-    // }
-  
-  //use startsWith method to check first element
-    //make result element type;
-    //split json 
-    //invoke matching function with element
-
-  // if (json.match(/true/g)) {
-  //   return true;
-  // } 
-
-  var myMethods = {
-    'parseArray': function () {
-  
-    },
-    'parseObj': function () {
-  
-    },
-    'parseString': function () {
-  
-    },
-    'parseNumber': function () {
-  
-    },
-    'parseBoolean': function () {
-  
-    },
-    'parseNull': function () { 
-
-    }
-  };
   
 };
 
-console.log(parseJSON('{"foo": true, "bar": false, "baz": null}'))
-
-
-//[]
+console.log(parseJSON('[{"a":"b"}, {"c":"d"}]'))
